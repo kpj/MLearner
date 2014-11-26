@@ -11,7 +11,7 @@ typedef struct gene {
     std::map<std::string, double> codon_freqs;
 } Gene;
 
-std::ofstream& operator<<(std::ofstream &out, Gene &g) {
+static std::ofstream& operator<<(std::ofstream &out, Gene &g) {
     out << g.name;
     return out;
 }
