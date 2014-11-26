@@ -59,9 +59,18 @@ int main(int argc, char **argv) {
     std::vector<Gene> genes;
 
     /*
+     * Parse cmd-line args
+     */
+    if(argc != 2) {
+        std::cout << "Usage: " << argv[0] << " <fasta file>" << std::endl;
+        return 1;
+    }
+    std::string fname = argv[1];
+
+    /*
      * Parse data
      */
-	std::ifstream fin("data/simple.fasta");
+	std::ifstream fin(fname.c_str());
 	fasta ele;
 
     while(!fin.eof()) {
@@ -94,7 +103,7 @@ int main(int argc, char **argv) {
     /*
      * Save results
      */
-    Utils::saveClusters<Gene>("cluster_", res);
+    Utils::saveClusters<Gene>(fname + "_cluster_", res);
 
 	return 0;
 }
