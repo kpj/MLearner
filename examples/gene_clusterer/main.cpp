@@ -91,5 +91,10 @@ int main(int argc, char **argv) {
     std::vector< std::vector<Gene> > res = clus.run();
     //Analyzer::cluster_stats(res);
 
+    /*
+     * Save results
+     */
+    Utils::saveClusters<Gene>("cluster_", res);
+
 	return 0;
 }
