@@ -13,7 +13,7 @@ $ ./build.sh
 Let's try to find some structure in genes from dicty.
 Their sequences can be found at [dictybase](http://dictybase.org/db/cgi-bin/dictyBase/download/blast_databases.pl).
 
-To run this example, first generate your clusters using
+To run this example, navigate to `./examples/gene_clusterer/` and generate your clusters using
 ```
 ./clusterer/clusterer <fasta file>
 ```
