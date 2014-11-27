@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
 
         cur.name = ele.id;
         cur.sequence = ele.sequence;
-        cur.codon_freqs = Analyzer::compute_frequencies(ele.sequence, true);
+        //cur.codon_freqs = Analyzer::compute_frequencies(ele.sequence, true);
         cur.chromosome = (parts.size() >= 7)?parts[6]:"NA"; // get chromosome
 
         genes.push_back(cur);
@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
     /*
      * Some k-means clustering
      */
-    Kluster<Gene> clus(6);
+    Kluster<Gene> clus(100);
 
     clus.get_cluster_mean = &get_cluster_mean;
     clus.get_clostest_cluster_index = &get_clostest_cluster_index;

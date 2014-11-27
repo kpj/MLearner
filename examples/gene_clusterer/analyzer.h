@@ -15,7 +15,7 @@ public:
 
     static void cluster_stats(std::vector< std::vector<Gene> > clusters);
 
-    static std::vector<double> codonFreqs(std::string codon, std::vector< std::vector<Gene> > clusters);
+    static void codonFreqs(std::string fname, std::vector< std::vector<Gene> > clusters);
 };
 
 #endif

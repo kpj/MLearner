@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <vector>
 
 #include "../../../src/cluster.h"
@@ -26,14 +27,22 @@ int main(int argc, char **argv) {
     genes = Utils::readClusters<Gene>(fname);
     std::cout << "Read " << genes.size() << " genes" << std::endl;
 
+    std::vector<Gene> tmp;
+    for(auto iter : genes) {
+        iter.codon_freqs = Analyzer::compute_frequencies(iter.sequence, true);
+        tmp.push_back(iter);
+    }
+    genes = tmp;
+
     // make some nice format
     std::vector< std::vector<Gene> > clusters = Utils::parseClusters(genes);
 
     /*
     * Further analyses
     */
-    Analyzer::cluster_stats(clusters);
-    //Analyzer::codonFreqs("AAA", clusters);
-    //Analyzer::codonFreqs("GAA", clusters);
-    //Analyzer::codonFreqs("CAA", clusters);
+    //Analyzer::cluster_stats(clusters);
+
+    std::stringstream ss;
+    ss << "codons_" << fname;
+    Analyzer::codonFreqs(ss.str(), clusters);
 }

@@ -2,6 +2,8 @@
 #include <sstream>
 #include <fstream>
 
+#include "data.h"
+
 #include "analyzer.h"
 
 
@@ -70,47 +72,58 @@ void Analyzer::cluster_stats(std::vector< std::vector<Gene> > clusters) {
     }
 }
 
-std::vector<double> Analyzer::codonFreqs(std::string codon, std::vector< std::vector<Gene> > clusters) {
+void Analyzer::codonFreqs(std::string fname, std::vector< std::vector<Gene> > clusters) {
     /*
-     * Computes frequency of specified codon in whole cluster
+     * Computes frequency of all codons in whole cluster
+     * and saves it to a file which can be easily read using R
      */
-    std::cout << "> Codon: " << codon << std::endl;
+    std::map<std::string, std::vector<double>> res;
 
-    std::vector<double> freqs;
+    // compute frequencies
+    for(std::size_t j = 0 ; j < all_codons.size() ; j++) {
+        std::string codon = all_codons[j];
+
+        std::vector<double> freqs;
+        for(std::size_t i = 0 ; i < clusters.size() ; i++) {
+            std::vector<Gene> clus = clusters[i];
+
+            int clus_len = 0;
+            for(std::size_t j = 0 ; j < clus.size() ; j++) {
+                clus_len += clus[j].sequence.size();
+            }
+
+            double freq = 0;
+            for(std::size_t j = 0 ; j < clus.size() ; j++) {
+                std::string seq = clus[j].sequence;
+                freq += clus[j].codon_freqs[codon] * seq.size() / clus_len;
+            }
+
+            freqs.push_back(freq);
+        }
+
+        res[codon] = freqs;
+    }
+
+    // save them to file
+    std::ofstream fout(fname.c_str());
+
+    // set header
+    fout << "cluster" << " ";
+    for(auto iter : res) {
+        fout << iter.first << " ";
+    }
+    fout << std::endl;
+
+    // save data
     for(std::size_t i = 0 ; i < clusters.size() ; i++) {
-        std::cout << "- Cluster #" << i << std::endl;
-        std::vector<Gene> clus = clusters[i];
+        fout << i << " ";
 
-        int clus_len = 0;
-        for(std::size_t j = 0 ; j < clus.size() ; j++) {
-            clus_len += clus[j].sequence.size();
+        for(auto iter : res) {
+            fout << iter.second[i] << " ";
         }
 
-        double freq = 0;
-        for(std::size_t j = 0 ; j < clus.size() ; j++) {
-            std::string seq = clus[j].sequence;
-
-            freq += clus[j].codon_freqs[codon] * seq.size() / clus_len;
-        }
-
-        std::cout << "-> " << freq << std::endl;
-        freqs.push_back(freq);
+        fout << std::endl;
     }
 
-    // get above average clusters
-    double freq_avg = 0;
-    for(std::size_t i = 0 ; i < freqs.size() ; i++) {
-        freq_avg += freqs[i];
-    }
-    freq_avg /= freqs.size();
-
-    std::cout << "Clusters with above average frequencies: ";
-    for(std::size_t i = 0 ; i < freqs.size() ; i++) {
-        if(freqs[i] >= freq_avg) {
-            std::cout << i << " ";
-        }
-    }
-    std::cout << std::endl;
-
-    return freqs;
+    fout.close();
 }
