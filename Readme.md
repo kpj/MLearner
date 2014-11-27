@@ -15,9 +15,9 @@ Their sequences can be found at [dictybase](http://dictybase.org/db/cgi-bin/dict
 
 To run this example, navigate to `./examples/gene_clusterer/` and generate your clusters using
 ```
-./clusterer/clusterer <fasta file>
+$ ./clusterer/clusterer <fasta file>
 ```
 You can then do many analyses by running
 ```
-./analyzer/analyzer <cluster file>
+$ ./analyzer/analyzer <cluster file>
 ```
