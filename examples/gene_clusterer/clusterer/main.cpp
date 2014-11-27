@@ -1,13 +1,13 @@
 #include <fstream>
 #include <iostream>
 
-#include "../../src/cluster.h"
-#include "../../src/utils.h"
+#include "../../../src/cluster.h"
+#include "../../../src/utils.h"
 
-#include "FastA.h"
-#include "data.h"
-#include "storage.h"
-#include "analyzer.h"
+#include "../FastA.h"
+#include "../data.h"
+#include "../storage.h"
+#include "../analyzer.h"
 
 
 std::map<std::string, double> get_cluster_mean(std::vector<Gene> cluster) {
@@ -79,6 +79,7 @@ int main(int argc, char **argv) {
         std::vector<std::string> parts = Utils::split(ele.info, ' ');
 
         cur.name = ele.id;
+        cur.sequence = ele.sequence;
         cur.codon_freqs = Analyzer::compute_frequencies(ele.sequence, true);
         cur.chromosome = (parts.size() >= 7)?parts[6]:"NA"; // get chromosome
 
@@ -98,12 +99,11 @@ int main(int argc, char **argv) {
 
     clus.init(genes);
     std::vector< std::vector<Gene> > res = clus.run();
-    //Analyzer::cluster_stats(res);
 
     /*
      * Save results
      */
-    Utils::saveClusters<Gene>(fname + "_cluster_", res);
+    Utils::saveClusters<Gene>("cluster_data_" + fname, res);
 
 	return 0;
 }

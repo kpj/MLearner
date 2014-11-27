@@ -69,3 +69,48 @@ void Analyzer::cluster_stats(std::vector< std::vector<Gene> > clusters) {
         std::cout << std::endl;
     }
 }
+
+std::vector<double> Analyzer::codonFreqs(std::string codon, std::vector< std::vector<Gene> > clusters) {
+    /*
+     * Computes frequency of specified codon in whole cluster
+     */
+    std::cout << "> Codon: " << codon << std::endl;
+
+    std::vector<double> freqs;
+    for(std::size_t i = 0 ; i < clusters.size() ; i++) {
+        std::cout << "- Cluster #" << i << std::endl;
+        std::vector<Gene> clus = clusters[i];
+
+        int clus_len = 0;
+        for(std::size_t j = 0 ; j < clus.size() ; j++) {
+            clus_len += clus[j].sequence.size();
+        }
+
+        double freq = 0;
+        for(std::size_t j = 0 ; j < clus.size() ; j++) {
+            std::string seq = clus[j].sequence;
+
+            freq += clus[j].codon_freqs[codon] * seq.size() / clus_len;
+        }
+
+        std::cout << "-> " << freq << std::endl;
+        freqs.push_back(freq);
+    }
+
+    // get above average clusters
+    double freq_avg = 0;
+    for(std::size_t i = 0 ; i < freqs.size() ; i++) {
+        freq_avg += freqs[i];
+    }
+    freq_avg /= freqs.size();
+
+    std::cout << "Clusters with above average frequencies: ";
+    for(std::size_t i = 0 ; i < freqs.size() ; i++) {
+        if(freqs[i] >= freq_avg) {
+            std::cout << i << " ";
+        }
+    }
+    std::cout << std::endl;
+
+    return freqs;
+}
